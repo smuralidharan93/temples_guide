@@ -1,0 +1,16 @@
+{
+    "name": "Shiva Temples Guide",
+    "short_name": "Shiva Temples",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#0d0d12",
+    "theme_color": "#7c4dff",
+    "icons": [
+        {
+            "src": "icon.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ]
+}
