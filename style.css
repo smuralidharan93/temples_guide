@@ -173,11 +173,130 @@ main {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Card Grid */
+.controls-secondary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.control-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.toggle-group,
+.view-toggle {
+    display: flex;
+    background: var(--surface-color);
+    padding: 0.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.toggle-btn,
+.view-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.toggle-btn.active,
+.view-btn.active {
+    background: var(--surface-highlight);
+    color: var(--accent-color);
+}
+
+.view-btn i {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* Card Grid Styles */
 .temple-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
+}
+
+/* List View overrides */
+.temple-grid.list-view {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.temple-grid.list-view .temple-card {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+}
+
+.temple-grid.list-view .card-header {
+    margin-bottom: 0;
+    flex: 0 0 40%;
+}
+
+.temple-grid.list-view .card-details {
+    margin-bottom: 0;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    flex: 1;
+}
+
+.temple-grid.list-view .card-footer {
+    padding-top: 0;
+    border-top: none;
+    flex: 0 0 100px;
+    justify-content: flex-end;
+}
+
+/* Grouping Sections */
+.group-section {
+    margin-bottom: 3rem;
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--surface-highlight);
+}
+
+.group-header h2 {
+    font-size: 1.25rem;
+    color: var(--secondary-color);
+    font-family: var(--font-tamil);
+}
+
+.group-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    background: var(--surface-highlight);
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
 }
 
 .temple-card {
@@ -502,3 +621,18 @@ main {
         transform: translateY(0);
     }
 }
+/* Enhanced Styles */
+.card-actions { display: flex; gap: 0.75rem; align-items: center; }
+.status-icon { width: 1.1rem; height: 1.1rem; transition: transform 0.2s; }
+.status-icon.visited { color: var(--accent-color); }
+.status-icon.togo { color: var(--secondary-color); }
+.temple-card.visited { border-color: var(--accent-color); background: linear-gradient(145deg, var(--surface-color), rgba(255, 126, 95, 0.05)); }
+.temple-card.togo { border-color: var(--secondary-color); }
+.history-scroll { max-height: 150px; overflow-y: auto; background: var(--surface-highlight); padding: 1rem; border-radius: 8px; font-size: 0.95rem; line-height: 1.6; border: 1px solid var(--border-color); }
+.history-scroll::-webkit-scrollbar { width: 6px; }
+.history-scroll::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+
+/* Visit Date Styles */
+.card-meta { display: flex; flex-direction: column; gap: 0.25rem; }
+.visit-date-tag { font-size: 0.75rem; color: var(--accent-color); display: flex; align-items: center; gap: 0.25rem; font-weight: 600; background: var(--surface-highlight); padding: 0.1rem 0.4rem; border-radius: 4px; width: fit-content; }
+.visit-date-tag i { width: 12px; height: 12px; }

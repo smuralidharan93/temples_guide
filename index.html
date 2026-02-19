@@ -73,6 +73,25 @@
                 </div>
             </div>
 
+            <div class="controls-secondary">
+                <div class="control-group">
+                    <label id="label-group-by" class="control-label">Group by:</label>
+                    <div class="toggle-group" id="group-by-toggle">
+                        <button class="toggle-btn active" data-group="none">None</button>
+                        <button class="toggle-btn" data-group="district">District</button>
+                        <button class="toggle-btn" data-group="naadu">Region</button>
+                        <button class="toggle-btn" data-group="date">Date</button>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="view-toggle" id="view-mode-toggle">
+                        <button class="view-btn active" data-view="grid" title="Grid View"><i
+                                data-lucide="layout-grid"></i></button>
+                        <button class="view-btn" data-view="list" title="List View"><i data-lucide="list"></i></button>
+                    </div>
+                </div>
+            </div>
+
             <div id="temple-list" class="temple-grid">
                 <!-- Temples will be injected here -->
             </div>
@@ -118,6 +137,7 @@
 
     <!-- Data and Logic -->
     <script src="data.js"></script>
+    <script src="divyadesam_data.js"></script>
     <script src="script.js"></script>
     <script>
         lucide.createIcons();
