@@ -33,10 +33,19 @@
 </head>
 
 <body>
+    <div class="mantram-ticker">
+        <div class="mantram-scroll">
+            ஓம் நமச்சிவாய &nbsp;&nbsp;•&nbsp;&nbsp; OM NAMAH SHIVAYA &nbsp;&nbsp;•&nbsp;&nbsp; சிவாய நமஹ
+            &nbsp;&nbsp;•&nbsp;&nbsp; SIVAYA NAMAHA &nbsp;&nbsp;•&nbsp;&nbsp; HARA HARA MAHADEV
+            &nbsp;&nbsp;•&nbsp;&nbsp; அண்ணாமலையாருக்கு அரோகரா &nbsp;&nbsp;•&nbsp;&nbsp; ஓம் நமச்சிவாய
+            &nbsp;&nbsp;•&nbsp;&nbsp; திருச்சிற்றம்பலம்
+        </div>
+    </div>
     <div id="app">
+
         <header class="app-header">
             <div class="logo">
-                <i data-lucide="map-pin"></i>
+                <i data-lucide="layout-grid"></i>
                 <h1>Shiva Temples</h1>
             </div>
             <div class="stats">
@@ -49,17 +58,36 @@
                     <span class="stat-value" id="togo-count">0</span>
                 </div>
             </div>
-            <button id="lang-toggle" class="btn-icon"
-                style="margin-left: 1rem; background: var(--surface-highlight); border: 1px solid var(--border-color); color: var(--text-color); padding: 0.5rem; border-radius: 8px; cursor: pointer; font-family: var(--font-primary); font-weight: 600;">
+            <button id="lang-toggle" class="btn-lang">
                 English
             </button>
         </header>
+
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h2 class="hero-subtitle">Exploring the Divine</h2>
+                <h1 class="hero-title">Paadal Petra Sivasthalangal</h1>
+                <p class="hero-desc">Discover the 276 sacred temples of Lord Shiva across Bharat, immortalized by
+                    the
+                    Moovar saints.</p>
+                <div class="hero-stats">
+                    <div class="h-stat"><span>276</span><label>Temples</label></div>
+                    <div class="h-stat"><span>14</span><label>Regions</label></div>
+                    <div class="h-stat"><span>3</span><label>Saints</label></div>
+                </div>
+            </div>
+        </section>
 
         <main>
             <div class="filters">
                 <div class="search-bar">
                     <i data-lucide="search"></i>
-                    <input type="text" id="search-input" placeholder="Search temples, districts...">
+                    <input type="text" id="search-input" placeholder="Search temples, districts..." autocomplete="off">
+                    <button id="voice-search-btn" class="voice-btn" title="Voice Search">
+                        <i data-lucide="mic"></i>
+                    </button>
+                    <div id="search-suggestions" class="search-suggestions hidden"></div>
                 </div>
                 <div class="district-filter">
                     <select id="district-select">
@@ -132,6 +160,37 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <button id="chat-fab" class="chat-fab" title="Temple Finder Chat">
+        <i data-lucide="message-circle"></i>
+    </button>
+    <div id="chat-panel" class="chat-panel hidden">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <i data-lucide="bot"></i>
+                <span>Temple Finder</span>
+            </div>
+            <button id="chat-close" class="chat-close"><i data-lucide="x"></i></button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="chat-msg bot">
+                <div class="chat-bubble">🙏 Vanakkam! I can help you find the right temple. Try asking:<br>
+                    <em>• "Temple with musical pillars"</em><br>
+                    <em>• "Pancha Bootha temple for space"</em><br>
+                    <em>• "Temples near Madurai"</em><br>
+                    <em>• "Temple where Nandanar attained moksha"</em>
+                </div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Ask about a temple..." autocomplete="off">
+            <button id="chat-voice-btn" class="voice-btn" title="Voice Input">
+                <i data-lucide="mic"></i>
+            </button>
+            <button id="chat-send" class="chat-send"><i data-lucide="send"></i></button>
         </div>
     </div>
 

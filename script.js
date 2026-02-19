@@ -43,7 +43,11 @@ const translations = {
         listView: "பட்டியல்",
         shivaTitle: "சிவன் கோயில்கள் (பாடல் பெற்ற தலங்கள்)",
         divyaTitle: "108 வைணவ திவ்ய தேசங்கள்",
-        unspecifiedDate: "தேதி குறிப்பிடப்படாதவை"
+        unspecifiedDate: "தேதி குறிப்பிடப்படாதவை",
+        tabId: "எண்",
+        tabName: "பெயர்",
+        tabDistrict: "மாவட்டம்",
+        tabLocation: "ஊர்/விவரம்"
     },
     en: {
         title: "Temple Guide",
@@ -70,7 +74,11 @@ const translations = {
         listView: "List",
         shivaTitle: "Shiva Temples (Paadal Petra Sthalams)",
         divyaTitle: "108 Divya Desams",
-        unspecifiedDate: "Unspecified Date"
+        unspecifiedDate: "Unspecified Date",
+        tabId: "ID",
+        tabName: "Name",
+        tabDistrict: "District",
+        tabLocation: "Location/Details"
     }
 };
 
@@ -139,6 +147,7 @@ function init() {
     renderFilters();
     renderTemples();
     updateStats();
+    initSloganTicker();
 
     // Set initial toggle states based on state
     document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -348,9 +357,54 @@ function searchMatch(temple, term) {
     return false;
 }
 
+function renderTableMarkup(temples) {
+    const t = translations[state.lang];
+    const table = document.createElement('table');
+    table.className = 'temple-table';
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th>${t.tabId}</th>
+                <th>${t.tabName}</th>
+                <th>${t.tabDistrict}</th>
+                <th>${t.tabLocation}</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    `;
+    const tbody = table.querySelector('tbody');
+    temples.forEach(temple => tbody.appendChild(createTableRow(temple)));
+    return table;
+}
+
+function createTableRow(temple) {
+    const isVisited = state.visited.has(temple.id);
+    const tr = document.createElement('tr');
+    tr.className = `table-row ${isVisited ? 'visited' : ''}`;
+    tr.onclick = () => openModal(temple);
+
+    const imageUrl = getTempleImage(temple);
+
+    tr.innerHTML = `
+        <td class="cell-id">${temple.index}</td>
+        <td class="cell-name">
+            <div class="name-cell-content">
+                <div class="table-thumb">
+                    <img src="${imageUrl}" alt="" onerror="handleImgError(this)">
+                </div>
+                <strong>${getName(temple)}</strong>
+                ${isVisited ? '<i data-lucide="check-circle" class="visited-icon"></i>' : ''}
+            </div>
+        </td>
+        <td class="cell-district">${temple.district}</td>
+        <td class="cell-location">${temple.location || "-"}</td>
+    `;
+    return tr;
+}
+
 function renderTemples() {
     templeList.innerHTML = '';
-    templeList.className = `temple-grid ${state.viewMode === 'list' ? 'list-view' : ''}`;
+    templeList.className = `temple-display ${state.viewMode === 'list' ? 'mode-table' : 'mode-grid'}`;
 
     const filtered = state.temples.filter(t => {
         const districtMatch = state.filters.district === 'All' || t.district === state.filters.district;
@@ -361,10 +415,16 @@ function renderTemples() {
     });
 
     if (state.groupBy === 'none') {
-        filtered.forEach(temple => templeList.appendChild(createCard(temple)));
+        if (state.viewMode === 'list') {
+            templeList.appendChild(renderTableMarkup(filtered));
+        } else {
+            const grid = document.createElement('div');
+            grid.className = 'temple-grid';
+            filtered.forEach(temple => grid.appendChild(createCard(temple)));
+            templeList.appendChild(grid);
+        }
     } else {
         const groups = {};
-
         filtered.forEach(t => {
             let key = "";
             if (state.groupBy === 'district') key = t.district;
@@ -378,7 +438,6 @@ function renderTemples() {
                     key = translations[state.lang].unspecifiedDate;
                 }
             }
-
             if (!groups[key]) groups[key] = [];
             groups[key].push(t);
         });
@@ -400,10 +459,15 @@ function renderTemples() {
                     <h2>${key}</h2>
                     <span class="group-count">${groups[key].length}</span>
                 </div>
-                <div class="${state.viewMode === 'list' ? 'temple-list-v' : 'temple-grid'}"></div>
             `;
-            const container = section.querySelector('div:last-child');
-            groups[key].forEach(t => container.appendChild(createCard(t)));
+            if (state.viewMode === 'list') {
+                section.appendChild(renderTableMarkup(groups[key]));
+            } else {
+                const grid = document.createElement('div');
+                grid.className = 'temple-grid';
+                groups[key].forEach(t => grid.appendChild(createCard(t)));
+                section.appendChild(grid);
+            }
             templeList.appendChild(section);
         });
     }
@@ -416,34 +480,86 @@ function renderTemples() {
     });
 }
 
+// Sample Temple Images - No longer used, using universal image
+const sampleImages = [];
+
+const UNIVERSAL_TEMPLE_IMG = 'https://images.unsplash.com/photo-1620619767323-b95a89183081?auto=format&fit=crop&w=1200&q=80';
+const SHIVA_HEADER_IMG = UNIVERSAL_TEMPLE_IMG;
+// Premium SVG Fallback (Sacred Lamp) - Guaranteed to load instantly
+const DEFAULT_FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f1c40f'%3E%3Cpath d='M12 2C12 2 7 7 7 12C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12C17 7 12 2 12 2ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z'/%3E%3Cpath d='M12 22C16.4183 22 20 20.2091 20 18H4C4 20.2091 7.58172 22 12 22Z'/%3E%3C/svg%3E";
+
+function getTempleImage(temple) {
+    return UNIVERSAL_TEMPLE_IMG;
+}
+
+window.handleImgError = function (img) {
+    img.onerror = null; // Prevent infinite loop
+    img.src = DEFAULT_FALLBACK;
+    img.classList.add('img-fallback-active');
+};
+
 function createCard(temple) {
     const isVisited = state.visited.has(temple.id);
     const isTogo = state.togo.has(temple.id);
     const visitDate = state.visitedDates[temple.id];
+    const imageUrl = getTempleImage(temple);
 
     const div = document.createElement('div');
     div.className = `temple-card ${isVisited ? 'visited' : ''} ${isTogo ? 'togo' : ''}`;
     div.onclick = () => openModal(temple);
 
     div.innerHTML = `
-        <div class="card-header">
-            <h3 class="card-title">${getName(temple)}</h3>
-            <span class="card-id">${temple.index}</span>
+        <div class="card-image">
+            <img src="${imageUrl}" alt="${getName(temple)}" loading="lazy" onerror="handleImgError(this)">
+            <div class="card-image-overlay"></div>
+            <span class="card-id-badge">${temple.index}</span>
         </div>
-        <p class="card-details">${temple.location || temple.district}</p>
+        <div class="card-content">
+            <h3 class="card-title">${getName(temple)}</h3>
+            <p class="card-details">${temple.location || temple.district}</p>
+        </div>
         <div class="card-footer">
-            <div class="card-meta">
-                <span class="district-tag">${temple.district}</span>
-                ${visitDate ? `<span class="visit-date-tag"><i data-lucide="calendar"></i> ${visitDate}</span>` : ''}
-            </div>
+            <span class="district-tag">${temple.district}</span>
             <div class="card-actions">
-                ${isVisited ? '<i data-lucide="check-circle" class="status-icon visited"></i>' : ''}
-                ${isTogo ? '<i data-lucide="bookmark" class="status-icon togo"></i>' : ''}
+                ${isVisited ? '<i data-lucide="check-circle" class="status-icon visited" style="color:var(--accent-color)"></i>' : ''}
+                ${isTogo ? '<i data-lucide="bookmark" class="status-icon togo" style="color:var(--secondary-color)"></i>' : ''}
             </div>
         </div>
     `;
 
     return div;
+}
+
+// Slogan Rotation Logic
+const sloganSets = [
+    "ஓம் நமச்சிவாய &nbsp;&nbsp;•&nbsp;&nbsp; OM NAMAH SHIVAYA &nbsp;&nbsp;•&nbsp;&nbsp; சிவாய நமஹ &nbsp;&nbsp;•&nbsp;&nbsp; SIVAYA NAMAHA &nbsp;&nbsp;•&nbsp;&nbsp; HARA HARA MAHADEV &nbsp;&nbsp;•&nbsp;&nbsp; அண்ணாமலையாருக்கு அரோகரா &nbsp;&nbsp;•&nbsp;&nbsp; ஓம் நமச்சிவாய &nbsp;&nbsp;•&nbsp;&nbsp; திருச்சிற்றம்பலம்",
+    "ஓம் தத்புருஷாய வித்மஹே &nbsp;&nbsp;•&nbsp;&nbsp; RUDRA GAYATRI &nbsp;&nbsp;•&nbsp;&nbsp; சிவ சிவ சிவ சிவ &nbsp;&nbsp;•&nbsp;&nbsp; SHIVA SHIVA SHIVA SHIVA &nbsp;&nbsp;•&nbsp;&nbsp; தென்னாடுடைய சிவனே போற்றி &nbsp;&nbsp;•&nbsp;&nbsp; எந்நாட்டவர்க்கும் இறைவா போற்றி",
+    "ஓம் த்ரயம்பகம் யஜாமஹே &nbsp;&nbsp;•&nbsp;&nbsp; SACRED MANTRA &nbsp;&nbsp;•&nbsp;&nbsp; சாந்தி சாந்தி சாந்தி &nbsp;&nbsp;•&nbsp;&nbsp; OM SHANTI SHANTI SHANTI &nbsp;&nbsp;•&nbsp;&nbsp; ஓம் நமச்சிவாய &nbsp;&nbsp;•&nbsp;&nbsp; திருச்சிற்றம்பலம்"
+];
+let currentSloganIdx = 0;
+
+function initSloganTicker() {
+    const tickerContainer = document.querySelector('.mantram-ticker');
+    if (!tickerContainer) return;
+
+    tickerContainer.style.cursor = 'pointer';
+    tickerContainer.title = "Click to change mantram";
+
+    const changeSlogan = () => {
+        currentSloganIdx = (currentSloganIdx + 1) % sloganSets.length;
+        const scrollEl = tickerContainer.querySelector('.mantram-scroll');
+        if (scrollEl) {
+            scrollEl.style.transition = 'opacity 0.5s ease';
+            scrollEl.style.opacity = '0';
+            setTimeout(() => {
+                scrollEl.innerHTML = sloganSets[currentSloganIdx];
+                scrollEl.style.opacity = '1';
+            }, 500);
+        }
+    };
+
+    tickerContainer.addEventListener('click', changeSlogan);
+    setInterval(changeSlogan, 30000);
 }
 
 function setupEventListeners() {
@@ -538,7 +654,17 @@ function openModal(temple) {
     }
 
     const modalBody = document.querySelector('.modal-body');
+    const imageUrl = getTempleImage(temple);
+    const headerImg = UNIVERSAL_TEMPLE_IMG;
+
     modalBody.innerHTML = `
+        <div class="modal-image-container" style="margin-bottom: 1rem; border-radius: 16px; overflow: hidden; height: 220px; border: 1px solid var(--border-color); position: relative;">
+            <img id="modal-main-img" src="${headerImg}" style="width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s ease;" onerror="handleImgError(this)">
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); padding: 1rem;">
+                <span style="color: var(--secondary-color); font-size: 0.7rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px;">Divine Presence</span>
+            </div>
+        </div>
+
         <div class="deities-section">
             <div class="info-group">
                 <label>${godLabel}</label>
@@ -565,8 +691,11 @@ function openModal(temple) {
         </div>
 
         <div class="actions">
-            <a id="maps-link" href="#" target="_blank" class="btn btn-primary">
+            <a id="maps-link" href="#" target="_blank" class="btn btn-primary" style="text-decoration: none;">
                 <i data-lucide="map"></i> ${t.openMaps}
+            </a>
+            <a id="photos-link" href="#" target="_blank" class="btn btn-secondary" style="text-decoration: none; border: 1px solid var(--border-color); margin-top: 0.5rem; background: var(--surface-highlight); color: var(--text-color);">
+                <i data-lucide="image"></i> ${state.lang === 'ta' ? 'புகைப்படங்கள்' : 'View More Photos'}
             </a>
             <div class="toggle-status">
                 <label class="checkbox-container">
@@ -582,55 +711,64 @@ function openModal(temple) {
             </div>
         </div>
     `;
-
     const visitedCheck = document.getElementById('modal-visited-check');
     const togoCheck = document.getElementById('modal-togo-check');
     const dateInput = document.getElementById('modal-visit-date');
     const dateContainer = document.getElementById('visit-date-container');
-    const mLink = document.getElementById('maps-link');
 
-    visitedCheck.checked = state.visited.has(temple.id);
-    togoCheck.checked = state.togo.has(temple.id);
-
-    visitedCheck.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            state.visited.add(temple.id);
-            state.togo.delete(temple.id);
-            if (togoCheck) togoCheck.checked = false;
-            dateContainer.style.display = 'block';
-            if (!dateInput.value) {
-                const today = new Date().toISOString().split('T')[0];
-                dateInput.value = today;
-                state.visitedDates[temple.id] = today;
+    if (visitedCheck) {
+        visitedCheck.checked = state.visited.has(temple.id);
+        visitedCheck.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                state.visited.add(temple.id);
+                state.togo.delete(temple.id);
+                if (togoCheck) togoCheck.checked = false;
+                dateContainer.style.display = 'block';
+                if (!dateInput.value) {
+                    const today = new Date().toISOString().split('T')[0];
+                    dateInput.value = today;
+                    state.visitedDates[temple.id] = today;
+                }
+            } else {
+                state.visited.delete(temple.id);
+                dateContainer.style.display = 'none';
+                delete state.visitedDates[temple.id];
             }
-        } else {
-            state.visited.delete(temple.id);
-            dateContainer.style.display = 'none';
-            delete state.visitedDates[temple.id];
-        }
-        saveState();
-        renderTemples();
-        updateStats();
-    });
+            saveState();
+            renderTemples();
+            updateStats();
+        });
+    }
 
-    dateInput.addEventListener('change', (e) => {
-        state.visitedDates[temple.id] = e.target.value;
-        saveState();
-        renderTemples();
-    });
+    if (togoCheck) {
+        togoCheck.checked = state.togo.has(temple.id);
+        togoCheck.addEventListener('change', (e) => {
+            if (e.target.checked) state.togo.add(temple.id);
+            else state.togo.delete(temple.id);
+            saveState();
+            renderTemples();
+            updateStats();
+        });
+    }
 
-    togoCheck.addEventListener('change', (e) => {
-        if (e.target.checked) state.togo.add(temple.id);
-        else state.togo.delete(temple.id);
-        saveState();
-        renderTemples();
-        updateStats();
-    });
+    if (dateInput) {
+        dateInput.addEventListener('change', (e) => {
+            state.visitedDates[temple.id] = e.target.value;
+            saveState();
+            renderTemples();
+        });
+    }
 
     const query = `${getName(temple)} Temple, ${temple.location || ''}, ${temple.district}`;
-    mLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    const mLink = document.getElementById('maps-link');
+    const pLink = document.getElementById('photos-link');
+
+    if (mLink) mLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+    if (pLink) pLink.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query + " photos")}`;
 
     lucide.createIcons();
+
+    modal.classList.remove('hidden');
     modal.style.display = 'flex';
     setTimeout(() => modal.classList.add('active'), 10);
 }
@@ -641,3 +779,364 @@ function closeModal() {
 }
 
 init();
+
+// ============================================================
+// QUICK SEARCH WITH AUTOCOMPLETE SUGGESTIONS
+// ============================================================
+(function initQuickSearch() {
+    const suggestions = document.getElementById('search-suggestions');
+    const input = document.getElementById('search-input');
+    if (!suggestions || !input) return;
+
+    let activeIdx = -1;
+
+    function getSuggestions(query) {
+        if (!query || query.length < 2) return [];
+        const q = query.toLowerCase();
+        const results = [];
+        const seen = new Set();
+
+        state.temples.forEach(t => {
+            let matchType = '';
+            let matchField = '';
+
+            if (t.name_en && t.name_en.toLowerCase().includes(q)) {
+                matchType = 'temple';
+                matchField = t.name_en;
+            } else if (t.name_ta.toLowerCase().includes(q)) {
+                matchType = 'temple';
+                matchField = t.name_ta;
+            } else if (t.god && t.god.toLowerCase().includes(q)) {
+                matchType = 'god';
+                matchField = t.god;
+            } else if (t.goddess && t.goddess.toLowerCase().includes(q)) {
+                matchType = 'god';
+                matchField = t.goddess;
+            } else if (t.district.toLowerCase().includes(q)) {
+                matchType = 'district';
+                matchField = t.district;
+            } else if (t.location && t.location.toLowerCase().includes(q)) {
+                matchType = 'district';
+                matchField = t.location;
+            } else if (t.history && t.history.toLowerCase().includes(q)) {
+                matchType = 'temple';
+                matchField = t.history.substring(0, 60) + '...';
+            }
+
+            if (matchType) {
+                const key = t.id;
+                if (!seen.has(key)) {
+                    seen.add(key);
+                    results.push({ temple: t, matchType, matchField });
+                }
+            }
+        });
+
+        return results.slice(0, 8);
+    }
+
+    function renderSuggestions(items) {
+        if (!items.length) {
+            suggestions.classList.add('hidden');
+            return;
+        }
+        activeIdx = -1;
+        suggestions.innerHTML = items.map((item, i) => `
+            <div class="suggestion-item" data-idx="${i}">
+                <div class="suggestion-icon"><i data-lucide="map-pin"></i></div>
+                <div class="suggestion-info">
+                    <div class="suggestion-name">${getName(item.temple)}</div>
+                    <div class="suggestion-meta">
+                        <span class="suggestion-highlight">${truncate(item.matchField, 40)}</span>
+                        <span>${item.temple.district}</span>
+                    </div>
+                </div>
+                <span class="suggestion-type ${item.matchType}">${item.matchType}</span>
+            </div>
+        `).join('');
+        suggestions.classList.remove('hidden');
+        lucide.createIcons();
+
+        suggestions.querySelectorAll('.suggestion-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const idx = parseInt(el.dataset.idx);
+                const t = items[idx].temple;
+                suggestions.classList.add('hidden');
+                input.value = getName(t);
+                openModal(t);
+            });
+        });
+    }
+
+    function truncate(str, max) {
+        if (!str) return '';
+        return str.length > max ? str.substring(0, max) + '...' : str;
+    }
+
+    input.addEventListener('input', (e) => {
+        state.filters.search = e.target.value;
+        renderTemples();
+        const items = getSuggestions(e.target.value);
+        renderSuggestions(items);
+    });
+
+    input.addEventListener('keydown', (e) => {
+        const items = suggestions.querySelectorAll('.suggestion-item');
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIdx = Math.min(activeIdx + 1, items.length - 1);
+            items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIdx = Math.max(activeIdx - 1, 0);
+            items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+        } else if (e.key === 'Enter' && activeIdx >= 0) {
+            e.preventDefault();
+            items[activeIdx]?.click();
+        } else if (e.key === 'Escape') {
+            suggestions.classList.add('hidden');
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-bar')) {
+            suggestions.classList.add('hidden');
+        }
+    });
+})();
+
+// ============================================================
+// VOICE SEARCH (Web Speech API)
+// ============================================================
+(function initVoiceSearch() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+        document.querySelectorAll('.voice-btn').forEach(b => b.style.display = 'none');
+        return;
+    }
+
+    function createRecognition(onResult, btn) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = state.lang === 'ta' ? 'ta-IN' : 'en-IN';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => btn.classList.add('recording');
+        recognition.onend = () => btn.classList.remove('recording');
+        recognition.onerror = () => btn.classList.remove('recording');
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            onResult(transcript);
+        };
+
+        return recognition;
+    }
+
+    // Main search voice button
+    const voiceBtn = document.getElementById('voice-search-btn');
+    const searchInput = document.getElementById('search-input');
+    if (voiceBtn && searchInput) {
+        voiceBtn.addEventListener('click', () => {
+            const rec = createRecognition((text) => {
+                searchInput.value = text;
+                searchInput.dispatchEvent(new Event('input'));
+            }, voiceBtn);
+            rec.start();
+        });
+    }
+
+    // Chat voice button
+    const chatVoiceBtn = document.getElementById('chat-voice-btn');
+    const chatInput = document.getElementById('chat-input');
+    if (chatVoiceBtn && chatInput) {
+        chatVoiceBtn.addEventListener('click', () => {
+            const rec = createRecognition((text) => {
+                chatInput.value = text;
+                // Auto-send
+                document.getElementById('chat-send')?.click();
+            }, chatVoiceBtn);
+            rec.start();
+        });
+    }
+})();
+
+// ============================================================
+// CHAT WIDGET — Local Temple Finder Engine
+// ============================================================
+(function initChat() {
+    const fab = document.getElementById('chat-fab');
+    const panel = document.getElementById('chat-panel');
+    const closeBtn = document.getElementById('chat-close');
+    const sendBtn = document.getElementById('chat-send');
+    const chatInput = document.getElementById('chat-input');
+    const messages = document.getElementById('chat-messages');
+    if (!fab || !panel) return;
+
+    // Toggle chat panel
+    fab.addEventListener('click', () => {
+        const isOpen = panel.classList.contains('active');
+        if (isOpen) {
+            panel.classList.remove('active');
+            fab.classList.remove('active');
+            setTimeout(() => panel.classList.add('hidden'), 300);
+        } else {
+            panel.classList.remove('hidden');
+            fab.classList.add('active');
+            requestAnimationFrame(() => {
+                panel.classList.add('active');
+                chatInput.focus();
+            });
+        }
+        lucide.createIcons();
+    });
+
+    closeBtn.addEventListener('click', () => {
+        panel.classList.remove('active');
+        fab.classList.remove('active');
+        setTimeout(() => panel.classList.add('hidden'), 300);
+    });
+
+    // Send message
+    function sendMessage() {
+        const text = chatInput.value.trim();
+        if (!text) return;
+        appendMsg('user', text);
+        chatInput.value = '';
+        showTyping();
+        setTimeout(() => {
+            removeTyping();
+            const response = processQuery(text);
+            appendMsg('bot', response.html, true);
+            lucide.createIcons();
+            // Attach click handlers to result cards
+            messages.querySelectorAll('.chat-result-card[data-id]').forEach(card => {
+                card.addEventListener('click', () => {
+                    const t = state.temples.find(x => x.id === card.dataset.id);
+                    if (t) openModal(t);
+                });
+            });
+        }, 600 + Math.random() * 400);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    function appendMsg(role, content, isHtml) {
+        const div = document.createElement('div');
+        div.className = `chat-msg ${role}`;
+        div.innerHTML = `<div class="chat-bubble">${isHtml ? content : escapeHtml(content)}</div>`;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function showTyping() {
+        const div = document.createElement('div');
+        div.className = 'chat-msg bot typing-msg';
+        div.innerHTML = `<div class="chat-bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+        messages.appendChild(div);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function removeTyping() {
+        const el = messages.querySelector('.typing-msg');
+        if (el) el.remove();
+    }
+
+    function escapeHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str;
+        return d.innerHTML;
+    }
+
+    // ---- Local Search Engine for Chat ----
+    function processQuery(query) {
+        const q = query.toLowerCase();
+        let results = [];
+
+        // Keyword synonyms / expansion
+        const keywords = extractKeywords(q);
+
+        // Score each temple
+        state.temples.forEach(t => {
+            let score = 0;
+            const searchable = [
+                t.name_en, t.name_ta, t.god, t.goddess,
+                t.history, t.travel, t.district, t.location, t.originalText
+            ].map(s => (s || '').toLowerCase()).join(' ');
+
+            keywords.forEach(kw => {
+                if (searchable.includes(kw)) {
+                    score += 10;
+                    // Boost if keyword in god/goddess/name
+                    if ((t.god || '').toLowerCase().includes(kw)) score += 5;
+                    if ((t.goddess || '').toLowerCase().includes(kw)) score += 5;
+                    if ((t.name_en || '').toLowerCase().includes(kw)) score += 8;
+                    if ((t.history || '').toLowerCase().includes(kw)) score += 3;
+                }
+            });
+
+            if (score > 0) results.push({ temple: t, score });
+        });
+
+        results.sort((a, b) => b.score - a.score);
+        results = results.slice(0, 5);
+
+        if (results.length === 0) {
+            return {
+                html: `I couldn't find temples matching "<strong>${escapeHtml(query)}</strong>". Try searching by:<br>
+                    <em>• God/Goddess name (e.g., Natarajar)</em><br>
+                    <em>• Location (e.g., Chidambaram)</em><br>
+                    <em>• Feature (e.g., musical pillars)</em><br>
+                    <em>• Legend (e.g., Arjuna, Nandanar)</em>`
+            };
+        }
+
+        let html = `Found <strong>${results.length}</strong> temple${results.length > 1 ? 's' : ''} for "<strong>${escapeHtml(query)}</strong>":<br>`;
+        results.forEach(r => {
+            const t = r.temple;
+            const displayName = getName(t);
+            const detail = t.god ? `${t.god}` : t.district;
+            html += `
+                <div class="chat-result-card" data-id="${t.id}">
+                    <div class="chat-result-name">${displayName}</div>
+                    <div class="chat-result-detail">${detail} — ${t.district}</div>
+                </div>`;
+        });
+        html += `<br><em>Tap a temple to view details</em>`;
+
+        return { html };
+    }
+
+    function extractKeywords(query) {
+        // Remove common stop words
+        const stopWords = new Set([
+            'the', 'a', 'an', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'to', 'for',
+            'of', 'with', 'by', 'from', 'and', 'or', 'but', 'not', 'this', 'that', 'it',
+            'i', 'me', 'my', 'we', 'our', 'you', 'your', 'he', 'she', 'they', 'them',
+            'what', 'where', 'which', 'who', 'when', 'how', 'can', 'do', 'does', 'did',
+            'has', 'have', 'had', 'will', 'would', 'could', 'should', 'may', 'might',
+            'find', 'search', 'show', 'tell', 'about', 'temple', 'temples', 'kovil',
+            'near', 'please', 'want', 'need', 'looking', 'look'
+        ]);
+
+        let words = query
+            .replace(/[?!.,;:'"()]/g, '')
+            .split(/\s+/)
+            .filter(w => w.length > 1 && !stopWords.has(w));
+
+        // Also keep multi-word phrases (2-3 word combos)
+        const phrases = [];
+        const rawWords = query.replace(/[?!.,;:'"()]/g, '').split(/\s+/);
+        for (let i = 0; i < rawWords.length - 1; i++) {
+            phrases.push(rawWords[i] + ' ' + rawWords[i + 1]);
+            if (i < rawWords.length - 2) {
+                phrases.push(rawWords[i] + ' ' + rawWords[i + 1] + ' ' + rawWords[i + 2]);
+            }
+        }
+
+        return [...words, ...phrases];
+    }
+})();

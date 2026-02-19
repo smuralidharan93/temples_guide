@@ -303,81 +303,81 @@
         "District": "கடலூர் மாவட்டம்",
         "Details": "30. திருமூலநாதர் - சிதம்பரம். (நடராஜர் கோயில்) - 94439 86996.",
         "ID": "NCN001",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Natarajar / Tirumoolanathar (Akasa Lingam)",
+        "Goddess": "Sivagami / Sivakami Ammai",
+        "Sthala_Varalaru": "Pancha Bootha Sthalam representing Space (Akasam). The most significant Shiva temple for Saivites — 'Kovil' is synonymous with Chidambaram. Houses the Akasa Lingam and Nataraja in the Kanaka Sabha with gold-plated roof. Features 21,600 gold sheets (representing nerves) fixed with 72,000 gold nails (representing nadis). Also a Divya Desam (Govinda Raja Perumal). Nandanar and Patanjali attained moksha here.",
+        "Travel_Details": "Located in the heart of Chidambaram town, Cuddalore district. Well connected by road and rail.",
+        "Name_EN": "Chidambaram Natarajar"
     },
     {
         "District": "",
         "Details": "31. பாசுபதேஸ்வரர் - திருவேட்களம். சிதம்பரம் அண்ணாமலை பல்கலைக்கழக வளாகம். - 98420 08291, 98433 88552.",
         "ID": "NCN002",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Pasupatheeswarar",
+        "Goddess": "Gnana Ambikai",
+        "Sthala_Varalaru": "Sacred site where Arjuna performed tapas to obtain the Pashupatastra from Shiva. Shiva appeared as a hunter (Kirata) and fought Arjuna. The Linga still bears the mark of Arjuna's blow. Features Urchava idols of Shiva as hunter with Pashupatastra alongside Parvathi and Arjuna. Sambandhar stayed here and would visit Chidambaram.",
+        "Travel_Details": "Located in Tiruvetkalam, within the Annamalai University campus, Chidambaram.",
+        "Name_EN": "Tiruvetkalam Pasupatheeswarar"
     },
     {
         "District": "",
         "Details": "32. உச்சிநாதர் - சிவபுரி.சிதம்பரம்- கவரப்பட்டு வழியில் 3 கி.மீ., - 98426 24580.",
         "ID": "NCN003",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Uchchinatheswarar",
+        "Goddess": "Gnana Ambikai",
+        "Sthala_Varalaru": "Named after Uchchinatheswarar who satisfied Tirugyanasambandhar's hunger at noon (Uchchi = noon). The presiding deity is a Swayambhu Linga. Features 5-kala pooja daily. Sambandar frequently visited this temple during his stay at Tiruvetkalam. Saint Arunagirinathar praised Lord Muruga here in Tirupugazh.",
+        "Travel_Details": "Located in Sivapuri, 3 km from Chidambaram on the Kavarappattu road.",
+        "Name_EN": "Sivapuri Tirunelvayal Uchchinatheswarar"
     },
     {
         "District": "",
         "Details": "33. பால்வண்ணநாதர் - திருக்கழிப்பாலை, சிதம்பரம்- கவரப்பட்டு (பைரவர் கோயில்)வழியில் 3 கி.மீ., - 98426 24580.",
         "ID": "NCN004",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Paalvannanathar",
+        "Goddess": "Vedhanayaki",
+        "Sthala_Varalaru": "The original temple was destroyed by a flood in the Kollidam River and was relocated to Sivapuri. The Lingam is white as milk, consecrated by Sage Kapila from white sand enriched by cow's milk. Still bears a depression from a horse's hoof. Features a Kala Bhairava comparable to the Kasi Bhairava. Sage Vanmeeka worshipped here.",
+        "Travel_Details": "Located in Sivapuri (Tirukazhippalai), 3 km from Chidambaram on the Kavarappattu road, near Bhairavar temple.",
+        "Name_EN": "Tirukazhippalai Paalvannanathar"
     },
     {
         "District": "",
         "Details": "34. பிரணவ வியாக்ரபுரீஸ்வரர் - ஓமாம்புலியூர். சிதம்பரத்தில் இருந்து 3 கி.மீ. - 04144 - 264 845.",
         "ID": "NCN031",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Thuyarantheerta Nathar / Pranava Vyaghrapureeswarar",
+        "Goddess": "Nilayadakshi",
+        "Sthala_Varalaru": "Named Omampuliyur after perpetual Homam (fire rituals) filling the air with fragrant smoke. Parvati was cursed to human form for being distracted during Shiva's explanation of the Pranava mantra 'Om'. She performed penance here under an Elandai tree. Muruga secretly learnt the Pranava from this discourse by entering as a beetle through the Gho-mukha spout.",
+        "Travel_Details": "Located in Omampuliyur, 3 km from Chidambaram.",
+        "Name_EN": "TiruOmampuliyur Pranava Vyaghrapureeswarar"
     },
     {
         "District": "",
         "Details": "35. பதஞ்சலீஸ்வரர் - கானாட்டம்புலியூர், சிதம்பரத்தில் இருந்து காட்டுமன்னார்கோயில் வழியே 28 கி.மீ., - 04144 - 208 508, 93457 78863.",
         "ID": "NCN032",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Pathanjali Eeshwarar",
+        "Goddess": "Ambujakshi / Kaanaar Kuzhali Ammai",
+        "Sthala_Varalaru": "Adishesha took birth as Sage Patanjali to witness Shiva's cosmic dance. Shiva blessed him with a vision of His dance at this temple. Features a small Swayambhu Linga. During Chithirai month, sunlight falls on the deity for 3 consecutive days. Renowned for curing Naga Dosha.",
+        "Travel_Details": "Located in Kanattampuliyur (Kanaattampuliyur), 28 km from Chidambaram via Kattumannarkoil.",
+        "Name_EN": "Tirukanattumullur Pathanjali Eeshwarar"
     },
     {
         "District": "",
         "Details": "36. சவுந்தர்யேஸ்வரர் - திருநாரையூர்.சிதம்பரம்- காட்டுமன்னார் கோயில் வழியில் 18 கி.மீ., - 94425 71039, 94439 06219.",
         "ID": "NCN033",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Soundareshwarar",
+        "Goddess": "Azhagammai",
+        "Sthala_Varalaru": "Named after a Gandarva cursed by Sage Durvasa to become a Naarai (heron-like bird). The bird fetched Ganges water daily to perform Abishekam to the Shiva Linga and was freed from the curse. Famous for 'Polla Pillayar' — a Swayambhu Vinayaka that miraculously ate the naivedya offered by young devotee Nambi-andar-nambi.",
+        "Travel_Details": "Located in Tirunaraiyur, 18 km from Chidambaram via Kattumannarkoil.",
+        "Name_EN": "Tirunaraiyur Soundareshwarar"
     },
     {
         "District": "",
         "Details": "37. அமிர்தகடேஸ்வரர் - மேலக்கடம்பூர். சிதம்பரத்தில் இருந்து காட்டுமன்னார்கோயில் வழியே 28 கி.மீ., - 93456 56982.",
         "ID": "NCN034",
-        "God": "",
-        "Goddess": "",
-        "Sthala_Varalaru": "",
-        "Travel_Details": "",
-        "Name_EN": ""
+        "God": "Amirthakadeshwarar",
+        "Goddess": "Azhagammai",
+        "Sthala_Varalaru": "A drop of Amritha (nectar of immortality) fell here when Vinayaka seized the pot from the Devas who forgot to worship him. The Linga manifested where the nectar drop touched earth in a Kadamba forest. Sanctum designed as a chariot with wheels and horses — one wheel is submerged underground from Vinayaka pressing it. Features stunning sculptures of Alingana Murthy.",
+        "Travel_Details": "Located in Melakkadambur (Tirukadambur), 28 km from Chidambaram via Kattumannarkoil.",
+        "Name_EN": "Tirukadambur Melakkadambur Amirthakadeshwarar"
     },
     {
         "District": "",
@@ -509,7 +509,7 @@
         "Travel_Details": "Located in Tirunelvennai (Neyvanai), 15 km from Ulundurpet. Accessible via the Tirukkovilur-Ulundurpet route (near Eraiyur).",
         "Name_EN": "Tirunelvennai Swarnakateswarar"
     },
-	{
+    {
         "District": "",
         "Details": "51. கடைமுடிநாதர் - கீழையூர். வைத்தீஸ்வரன்கோயிலில் இருந்து 3 கி.மீ., - 04364 - 200 440.",
         "ID": "NCN018",
@@ -629,7 +629,7 @@
         "Travel_Details": "18 km from Mayiladuthurai on the road to Sirkazhi.",
         "Name_EN": "Thiruvalapputhur Manikkavannar"
     },
-	{
+    {
         "District": "",
         "Details": "63. நீலகண்டேஸ்வரர் - இலுப்பைப்பட்டு. வைத்தீஸ்வரன்கோயிலில் இருந்து 10 கி.மீ., - 04364 - 204 494.",
         "ID": "NCN030",
@@ -879,7 +879,7 @@
         "Travel_Details": "15 km from Kumbakonam near Valangaiman.",
         "Name_EN": "Thirunallur Panchavarneswarar"
     },
-	{
+    {
         "District": "",
         "Details": "88. கர்க்கடேஸ்வரர் - திருந்துதேவன்குடி. கும்பகோணத்தில் இருந்து 10 கி.மீ., - 99427 75868.",
         "ID": "SCN013",
@@ -1129,7 +1129,7 @@
         "Travel_Details": "Located in Pasupathikoil village near Tanjore.",
         "Name_EN": "Thiruppullamangai Alandhurainathar"
     },
-	{
+    {
         "District": "",
         "Details": "113. தான்தோன்றீஸ்வரர் - ஆக்கூர். மயிலாடுதுறை- தரங்கம்பாடி வழியில் 15 கி.மீ., - 04364 - 280 812.",
         "ID": "SCN043",
@@ -1379,7 +1379,7 @@
         "Travel_Details": "10 km southeast of Sirkazhi.",
         "Name_EN": "Thiruvenkadu Swetharanyeswarar"
     },
-	{
+    {
         "District": "",
         "Details": "138. ஆரண்யேஸ்வரர் - திருக்காட்டுப்பள்ளி. திருவெண்காட்டில் இருந்து 0.5 கி.மீ., - 04364 - 256 313.",
         "ID": "NCN012",
@@ -1629,7 +1629,7 @@
         "Travel_Details": "On the banks of the Kaveri River, Mayiladuthurai town.",
         "Name_EN": "Mayiladuthurai Kasi Viswanathar"
     },
-	{
+    {
         "District": "பாண்டிய நாடு",
         "Details": "163. சொக்கநாதர் (மீனாட்சி அம்மன்) - மதுரை. - 0452 - 234 4360.",
         "ID": "PN001",
@@ -1879,7 +1879,7 @@
         "Travel_Details": "45 km from Erode near Kodumudi.",
         "Name_EN": "Vengambur Sathyagireeswarar"
     },
-	{
+    {
         "District": "நடு நாடு",
         "Details": "188. அருணாசலேஸ்வரர் - திருவண்ணாமலை. - 04175 - 252 438.",
         "ID": "NN022",
@@ -2129,7 +2129,7 @@
         "Travel_Details": "15 km from Chengalpattu and 12 km from Mahabalipuram.",
         "Name_EN": "Thirukazhukundram Vedagiriswarar"
     },
-	    {
+    {
         "District": "தொண்டை நாடு",
         "Details": "213. ஏகாம்பரநாதர் - காஞ்சிபுரம். - 044 - 2722 2084.",
         "ID": "TN001",
@@ -2759,7 +2759,7 @@
         "Travel_Details": "Located in Kiliyanur, 18 km from Tindivanam on the Pondicherry route (NH66).",
         "Name_EN": "Kiliyanur Agastheeswarar Temple"
     },
-	{
+    {
         "District": "",
         "Details": "276. புண்ணியகோடியப்பர் - திருவிடைவாசல். தஞ்சாவூர்-திருவாரூர் ரோட்டில் (கொரடாச்சேரி வழி) 45 கி.மீ., - 94433 32853, 04366-232 853.",
         "ID": "SCN128",
