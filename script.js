@@ -121,16 +121,7 @@ const modal = document.getElementById('temple-modal');
 const langBtn = document.getElementById('lang-toggle');
 
 // Source Toggle
-const sourceSelect = document.createElement('select');
-sourceSelect.id = 'source-select';
-sourceSelect.classList.add('source-select-custom');
-sourceSelect.style.cssText = "margin-left: 1rem; background: var(--surface-highlight); border: 1px solid var(--border-color); color: var(--text-color); padding: 0.5rem; border-radius: 8px; cursor: pointer; font-family: var(--font-primary); font-weight: 600;";
-sourceSelect.innerHTML = `
-    <option value="shiva">Shiva (276)</option>
-    <option value="divyadesam">Divya Desam (108)</option>
-`;
-const headerLogo = document.querySelector('.logo');
-if (headerLogo) headerLogo.appendChild(sourceSelect);
+const sourceToggleBtn = document.getElementById('source-toggle');
 
 // Modal Elements
 const modalTitle = document.getElementById('modal-title');
@@ -148,6 +139,8 @@ function init() {
     renderTemples();
     updateStats();
     initSloganTicker();
+    updateSourceButton();
+    updateHeroForSource();
 
     // Set initial toggle states based on state
     document.querySelectorAll('.toggle-btn').forEach(btn => {
@@ -230,6 +223,46 @@ function applyLanguage() {
         const key = btn.dataset.group;
         btn.textContent = t[key] || key;
     });
+
+    updateSourceButton();
+}
+
+function updateSourceButton() {
+    if (!sourceToggleBtn) return;
+    const isShiva = state.source === 'shiva';
+    sourceToggleBtn.querySelector('span').textContent = isShiva
+        ? "Switch to Divya Desams (108)"
+        : "Switch to Shiva Temples (276)";
+}
+
+function updateHeroForSource() {
+    const heroTitle = document.querySelector('.hero-title');
+    const heroDesc = document.querySelector('.hero-desc');
+    const heroStats = document.querySelectorAll('.h-stat');
+
+    if (state.source === 'divyadesam') {
+        if (heroTitle) heroTitle.textContent = '108 Divya Desams';
+        if (heroDesc) heroDesc.textContent = 'Discover the 108 sacred Vishnu temples across Bharat, sung by the 12 Azhwar saints in the Nalayira Divya Prabandham.';
+        if (heroStats.length >= 3) {
+            heroStats[0].querySelector('span').textContent = '108';
+            heroStats[0].querySelector('label').textContent = 'Temples';
+            heroStats[1].querySelector('span').textContent = '12';
+            heroStats[1].querySelector('label').textContent = 'Azhwars';
+            heroStats[2].querySelector('span').textContent = '4000';
+            heroStats[2].querySelector('label').textContent = 'Hymns';
+        }
+    } else {
+        if (heroTitle) heroTitle.textContent = 'Paadal Petra Sivasthalangal';
+        if (heroDesc) heroDesc.textContent = 'Discover the 276 sacred temples of Lord Shiva across Bharat, immortalized by the Moovar saints.';
+        if (heroStats.length >= 3) {
+            heroStats[0].querySelector('span').textContent = '276';
+            heroStats[0].querySelector('label').textContent = 'Temples';
+            heroStats[1].querySelector('span').textContent = '14';
+            heroStats[1].querySelector('label').textContent = 'Regions';
+            heroStats[2].querySelector('span').textContent = '3';
+            heroStats[2].querySelector('label').textContent = 'Saints';
+        }
+    }
 }
 
 function processData() {
@@ -364,10 +397,11 @@ function renderTableMarkup(temples) {
     table.innerHTML = `
         <thead>
             <tr>
-                <th>${t.tabId}</th>
+                <th width="50">${t.tabId}</th>
                 <th>${t.tabName}</th>
                 <th>${t.tabDistrict}</th>
-                <th>${t.tabLocation}</th>
+                <th width="80">Visited</th>
+                <th width="80">Plan</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -379,9 +413,14 @@ function renderTableMarkup(temples) {
 
 function createTableRow(temple) {
     const isVisited = state.visited.has(temple.id);
+    const isTogo = state.togo.has(temple.id);
     const tr = document.createElement('tr');
     tr.className = `table-row ${isVisited ? 'visited' : ''}`;
-    tr.onclick = () => openModal(temple);
+
+    // Main row click opens modal, but we prevent it on checkbox clicks
+    tr.onclick = (e) => {
+        if (e.target.tagName !== 'INPUT') openModal(temple);
+    };
 
     const imageUrl = getTempleImage(temple);
 
@@ -392,15 +431,66 @@ function createTableRow(temple) {
                 <div class="table-thumb">
                     <img src="${imageUrl}" alt="" onerror="handleImgError(this)">
                 </div>
-                <strong>${getName(temple)}</strong>
-                ${isVisited ? '<i data-lucide="check-circle" class="visited-icon"></i>' : ''}
+                <div class="name-cell-text">
+                    <strong>${getName(temple)}</strong>
+                    ${temple.god ? `<span class="cell-god">${temple.god}</span>` : ''}
+                    ${temple.location ? `<span class="cell-city">📍 ${temple.location}</span>` : ''}
+                </div>
             </div>
         </td>
         <td class="cell-district">${temple.district}</td>
-        <td class="cell-location">${temple.location || "-"}</td>
+        <td class="cell-action">
+            <input type="checkbox" class="status-check visited-check" 
+                ${isVisited ? 'checked' : ''} onclick="toggleStatus('${temple.id}', 'visited', this)">
+        </td>
+        <td class="cell-action">
+            <input type="checkbox" class="status-check togo-check" 
+                ${isTogo ? 'checked' : ''} onclick="toggleStatus('${temple.id}', 'togo', this)">
+        </td>
     `;
     return tr;
 }
+
+window.toggleStatus = function (id, type, checkbox) {
+    event.stopPropagation();
+    if (type === 'visited') {
+        if (checkbox.checked) {
+            state.visited.add(id);
+            state.visitedDates[id] = new Date().toISOString().split('T')[0];
+            state.togo.delete(id);
+        } else {
+            state.visited.delete(id);
+            delete state.visitedDates[id];
+        }
+    } else if (type === 'togo') {
+        if (checkbox.checked) {
+            state.togo.add(id);
+        } else {
+            state.togo.delete(id);
+        }
+    }
+    saveState();
+    updateStats();
+    if (state.filters.status !== 'all') {
+        renderTemples();
+    } else {
+        const row = checkbox.closest('tr');
+        if (type === 'visited') {
+            if (checkbox.checked) {
+                row.classList.add('visited');
+                const planCheck = row.querySelector('.togo-check');
+                if (planCheck && planCheck.checked) {
+                    planCheck.checked = false;
+                    state.togo.delete(id);
+                    saveState();
+                }
+            } else {
+                row.classList.remove('visited');
+            }
+        }
+    }
+};
+
 
 function renderTemples() {
     templeList.innerHTML = '';
@@ -582,17 +672,25 @@ function setupEventListeners() {
         });
     });
 
-    sourceSelect.addEventListener('change', (e) => {
-        state.source = e.target.value;
-        state.filters.district = 'All';
-        loadState();
-        processData();
-        renderFilters();
-        applyLanguage();
-        renderTemples();
-        updateStats();
-        saveState();
-    });
+    if (sourceToggleBtn) {
+        sourceToggleBtn.addEventListener('click', () => {
+            state.source = state.source === 'shiva' ? 'divyadesam' : 'shiva';
+            state.filters.district = 'All';
+            state.filters.search = '';
+            if (searchInput) searchInput.value = '';
+            // Save source FIRST so loadState picks up the correct visited/togo sets
+            localStorage.setItem('temple_source', state.source);
+            loadState();
+            processData();
+            renderFilters();
+            applyLanguage();
+            renderTemples();
+            updateStats();
+            saveState();
+            updateSourceButton();
+            updateHeroForSource();
+        });
+    }
 
     if (langBtn) {
         langBtn.addEventListener('click', () => {
@@ -601,6 +699,7 @@ function setupEventListeners() {
             applyLanguage();
             renderFilters();
             renderTemples();
+            renderFilters(); // Re-render filters to update language
         });
     }
 

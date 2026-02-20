@@ -449,7 +449,47 @@ main {
 .name-cell-content {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
+}
+
+.name-cell-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.name-cell-text strong {
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.cell-god {
+    font-size: 0.8rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.cell-city {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.cell-action {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.status-check {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+    transition: transform 0.2s ease;
+}
+
+.status-check:hover {
+    transform: scale(1.1);
 }
 
 .visited-icon {
