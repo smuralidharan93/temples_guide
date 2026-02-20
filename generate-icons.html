@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Generate PWA Icons</title>
+</head>
+
+<body>
+    <h1>PWA Icon Generator</h1>
+    <p>Click the button below, then save each downloaded file into the <code>icons/</code> folder.</p>
+    <button id="generate" style="padding:1rem 2rem; font-size:1.2rem; cursor:pointer;">Generate All Icons</button>
+    <div id="status" style="margin-top:1rem; font-family:monospace;"></div>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const svgSrc = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1a1a24" rx="100" ry="100"/>
+  <g fill="none" stroke="#ffd700" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 120v300M180 200v120c0 40 30 70 76 70s76-30 76-70V200M180 200c0-40 30-70 76-70s76 30 76 70"/>
+    <circle cx="256" cy="120" r="16" fill="#ffd700" stroke="none"/>
+    <path d="M150 420h212"/>
+  </g>
+</svg>`;
+
+        // Maskable icon has extra padding (safe zone is 80% center)
+        const svgMaskable = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1a1a24"/>
+  <g fill="none" stroke="#ffd700" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" transform="translate(76.8, 76.8) scale(0.7)">
+    <path d="M256 120v300M180 200v120c0 40 30 70 76 70s76-30 76-70V200M180 200c0-40 30-70 76-70s76 30 76 70"/>
+    <circle cx="256" cy="120" r="16" fill="#ffd700" stroke="none"/>
+    <path d="M150 420h212"/>
+  </g>
+</svg>`;
+
+        document.getElementById('generate').onclick = async () => {
+            const status = document.getElementById('status');
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            for (const size of sizes) {
+                canvas.width = size;
+                canvas.height = size;
+                ctx.clearRect(0, 0, size, size);
+
+                const img = new Image();
+                const blob = new Blob([svgSrc], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+
+                await new Promise((resolve) => {
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0, size, size);
+                        URL.revokeObjectURL(url);
+
+                        canvas.toBlob((pngBlob) => {
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(pngBlob);
+                            a.download = `icon-${size}.png`;
+                            a.click();
+                            status.innerHTML += `✅ icon-${size}.png downloaded<br>`;
+                            resolve();
+                        }, 'image/png');
+                    };
+                    img.src = url;
+                });
+
+                await new Promise(r => setTimeout(r, 500)); // Small delay between downloads
+            }
+
+            // Generate maskable icons (192 and 512)
+            for (const size of [192, 512]) {
+                canvas.width = size;
+                canvas.height = size;
+                ctx.clearRect(0, 0, size, size);
+
+                const img = new Image();
+                const blob = new Blob([svgMaskable], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+
+                await new Promise((resolve) => {
+                    img.onload = () => {
+                        ctx.drawImage(img, 0, 0, size, size);
+                        URL.revokeObjectURL(url);
+
+                        canvas.toBlob((pngBlob) => {
+                            const a = document.createElement('a');
+                            a.href = URL.createObjectURL(pngBlob);
+                            a.download = `icon-maskable-${size}.png`;
+                            a.click();
+                            status.innerHTML += `✅ icon-maskable-${size}.png downloaded<br>`;
+                            resolve();
+                        }, 'image/png');
+                    };
+                    img.src = url;
+                });
+
+                await new Promise(r => setTimeout(r, 500));
+            }
+
+            status.innerHTML += `<br><strong>🎉 All icons generated! Move them to the icons/ folder.</strong>`;
+        };
+    </script>
+</body>
+
+</html>

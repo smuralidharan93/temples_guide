@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Guide — Offline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0d0d12;
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .offline-container {
+            max-width: 400px;
+        }
+
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.6;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #7c4dff, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #888;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .retry-btn {
+            background: linear-gradient(135deg, #7c4dff, #536dfe);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .retry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(124, 77, 255, 0.4);
+        }
+
+        .tamil-text {
+            font-family: 'Noto Sans Tamil', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="offline-container">
+        <div class="offline-icon">🙏</div>
+        <h1>You're Offline</h1>
+        <p>It seems you're not connected to the internet. Please check your connection and try again to explore the
+            sacred temples.</p>
+        <button class="retry-btn" onclick="location.reload()">Try Again</button>
+        <p class="tamil-text">இணையம் இல்லை. மீண்டும் முயற்சிக்கவும்.</p>
+    </div>
+</body>
+
+</html>

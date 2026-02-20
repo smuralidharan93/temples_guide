@@ -1039,3 +1039,28 @@ main {
 .view-section.hidden {
     display: none;
 }
+
+/* PWA Install Prompt Animation */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Standalone Mode (installed as app) */
+@media all and (display-mode: standalone) {
+    body {
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .header {
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+}

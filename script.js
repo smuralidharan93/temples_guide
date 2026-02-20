@@ -58,6 +58,8 @@ const translations = {
         tabId: "எண்",
         tabName: "பெயர்",
         tabDistrict: "மாவட்டம்",
+        found: "கண்டறியப்பட்டவை:",
+        temples: "கோயில்கள்",
         tabLocation: "ஊர்/விவரம்"
     },
     en: {
@@ -95,6 +97,8 @@ const translations = {
         tabId: "ID",
         tabName: "Name",
         tabDistrict: "District",
+        found: "Found:",
+        temples: "temples", // e.g. "Found: 10 temples"
         tabLocation: "Location/Details"
     }
 };
@@ -579,7 +583,7 @@ function createTableRow(temple) {
     const imageUrl = getTempleImage(temple);
 
     tr.innerHTML = `
-        <td class="cell-id">${temple.index}</td>
+        <td class="cell-id"><div>${temple.index}</div><div style="font-size:0.65rem; color:var(--primary-color); font-weight:600; opacity:0.8;">${temple.id}</div></td>
         <td class="cell-name">
             <div class="name-cell-content">
                 <div class="table-thumb">
@@ -662,6 +666,30 @@ function renderTemples() {
 
     // Pagination Logic
     const totalItems = filtered.length;
+
+    // Add result count display
+    let resultHeader = document.getElementById('results-header');
+    if (!resultHeader) {
+        resultHeader = document.createElement('div');
+        resultHeader.id = 'results-header';
+        resultHeader.style.padding = '0 1rem 1rem';
+        resultHeader.style.color = 'var(--text-muted)';
+        resultHeader.style.fontSize = '0.9rem';
+        templeList.parentNode.insertBefore(resultHeader, templeList);
+    }
+
+    if (state.filters.search || state.filters.district !== 'All' || state.filters.region !== 'All' || state.filters.status !== 'all') {
+        const t = translations[state.lang];
+        if (state.lang === 'ta') {
+            resultHeader.textContent = `${t.found} ${totalItems} ${t.temples}`;
+        } else {
+            resultHeader.textContent = `${t.found} ${totalItems} ${t.temples}`;
+        }
+        resultHeader.style.display = 'block';
+    } else {
+        resultHeader.style.display = 'none';
+    }
+
     const totalPages = Math.ceil(totalItems / state.itemsPerPage);
 
     // Ensure current page is valid after filtering
@@ -830,6 +858,7 @@ function createCard(temple) {
             <img src="${imageUrl}" alt="${getName(temple)}" loading="lazy" onerror="handleImgError(this)">
             <div class="card-image-overlay"></div>
             <span class="card-id-badge">${temple.index}</span>
+            <span class="card-id-badge" style="left:auto; right:12px; background:rgba(0,0,0,0.6); font-size:0.6rem;">${temple.id}</span>
         </div>
         <div class="card-content">
             <h3 class="card-title">${getName(temple)}</h3>
@@ -999,7 +1028,7 @@ function openModal(temple) {
     const t = translations[state.lang];
     modal.dataset.currentId = temple.id;
     modalTitle.textContent = getName(temple);
-    modalDistrict.textContent = temple.district;
+    modalDistrict.innerHTML = `<span style="display:inline-block; background:var(--primary-color); color:#fff; padding:0.15rem 0.6rem; border-radius:20px; font-size:0.7rem; font-weight:700; margin-right:0.5rem; letter-spacing:0.5px;">${temple.id}</span> ${temple.district}`;
 
     const godContent = temple.god || (state.lang === 'ta' ? "தகவல் இல்லை" : "Details coming soon");
     const goddessContent = temple.goddess || (state.lang === 'ta' ? "தகவல் இல்லை" : "Details coming soon");
