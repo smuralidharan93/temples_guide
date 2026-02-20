@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Update Data</title>
+</head>
+
+<body>
+    <pre id="output"></pre>
+    <script src="data.js"></script>
+    <script>
+        function getRegionName(id) {
+            if (!id) return "";
+            const prefix = id.replace(/[0-9]/g, '').toUpperCase();
+
+            if (prefix === "NCN") return "Chola Nadu - (Cauvery North Coast)";
+            if (prefix === "SCN") return "Chola Nadu (Cauvery South Coast)";
+            if (prefix === "NN") return "Nadu Nadu";
+            if (prefix === "TN") return "Thondai Nadu";
+            if (prefix === "PN") return "Pandiya Nadu";
+            if (prefix === "KN") return "Kongu Nadu";
+            if (prefix === "ML") return "Malai Nadu";
+            if (prefix === "MLN") return "Malai Nadu";
+            if (prefix === "TU") return "Tuluva Nadu";
+            if (prefix === "VN") return "Vada Nadu";
+            if (prefix === "EZ") return "Eezha Nadu";
+
+            return "";
+        }
+
+        const updatedData = templesData.map(t => {
+            if (t.ID === "Temple Index") return t;
+
+            let region = t.Region;
+            // Only update if missing or empty, or force update? 
+            // User asked to "update the Region in data.js for all the temples".
+            // So let's force update based on ID.
+
+            const newRegion = getRegionName(t.ID);
+            if (newRegion) region = newRegion;
+
+            // Reorder keys to put Region after District for tidiness (optional but nice)
+            return {
+                "District": t.District,
+                "Region": region || t.Region || "",
+                "Details": t.Details,
+                "ID": t.ID,
+                "God": t.God,
+                "Goddess": t.Goddess,
+                "Sthala_Varalaru": t.Sthala_Varalaru,
+                "Travel_Details": t.Travel_Details,
+                "Name_EN": t.Name_EN
+            };
+        });
+
+        document.getElementById('output').textContent = 'const templesData = ' + JSON.stringify(updatedData, null, 4) + ';';
+    </script>
+</body>
+
+</html>

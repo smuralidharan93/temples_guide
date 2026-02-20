@@ -59,9 +59,34 @@
                 </div>
             </div>
             <div class="header-actions">
-                <button id="source-toggle" class="btn-source">
-                    <i data-lucide="refresh-cw"></i>
-                    <span>Switch to Divya Desam</span>
+                <div class="source-selector" id="source-selector">
+                    <button class="selector-trigger" id="selector-trigger">
+                        <i data-lucide="library"></i>
+                        <span>Select Temple List</span>
+                        <i data-lucide="chevron-down" class="chevron"></i>
+                    </button>
+                    <div class="selector-menu" id="selector-menu">
+                        <button class="menu-item" data-source="shiva">
+                            <i data-lucide="flame"></i>
+                            <span>Shiva Temples (276)</span>
+                        </button>
+                        <button class="menu-item" data-source="divyadesam">
+                            <i data-lucide="sun"></i>
+                            <span>Divya Desams (108)</span>
+                        </button>
+                        <button class="menu-item" data-source="sakthi">
+                            <i data-lucide="flower-2"></i>
+                            <span>Sakthi Peedams (64)</span>
+                        </button>
+                        <button class="menu-item" data-source="jyothirlingam">
+                            <i data-lucide="gem"></i>
+                            <span>Jyothirlingams (12)</span>
+                        </button>
+                    </div>
+                </div>
+                <button id="journeys-toggle" class="btn-journeys" title="My Plans & Trips">
+                    <i data-lucide="map-pin-list"></i>
+                    <span class="btn-text">My Journeys</span>
                 </button>
                 <button id="lang-toggle" class="btn-lang">
                     English
@@ -69,67 +94,165 @@
             </div>
         </header>
 
-        <section class="hero">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <h2 class="hero-subtitle">Exploring the Divine</h2>
-                <h1 class="hero-title">Paadal Petra Sivasthalangal</h1>
-                <p class="hero-desc">Discover the 276 sacred temples of Lord Shiva across Bharat, immortalized by
-                    the
-                    Moovar saints.</p>
-                <div class="hero-stats">
-                    <div class="h-stat"><span>276</span><label>Temples</label></div>
-                    <div class="h-stat"><span>14</span><label>Regions</label></div>
-                    <div class="h-stat"><span>3</span><label>Saints</label></div>
+        <!-- Journeys Modal -->
+        <div id="journeys-modal" class="modal hidden">
+            <div class="modal-content journeys-content">
+                <button class="close-modal" id="close-journeys"><i data-lucide="x"></i></button>
+                <div class="journeys-header">
+                    <h2><i data-lucide="map-pin-list"></i> My Journeys</h2>
+                    <p>Manage your temple pilgrimages and future plans</p>
                 </div>
-            </div>
-        </section>
 
-        <main>
-            <div class="filters">
-                <div class="search-bar">
-                    <i data-lucide="search"></i>
-                    <input type="text" id="search-input" placeholder="Search temples, districts..." autocomplete="off">
-                    <button id="voice-search-btn" class="voice-btn" title="Voice Search">
-                        <i data-lucide="mic"></i>
-                    </button>
-                    <div id="search-suggestions" class="search-suggestions hidden"></div>
-                </div>
-                <div class="district-filter">
-                    <select id="district-select">
-                        <option value="All">All Districts</option>
-                    </select>
-                </div>
-                <div class="status-tabs">
-                    <button class="tab active" data-filter="all">All</button>
-                    <button class="tab" data-filter="visited">Visited</button>
-                    <button class="tab" data-filter="togo">To Go</button>
-                </div>
-            </div>
+                <div id="journeys-main-view">
+                    <div class="journeys-actions">
+                        <button id="add-journey-btn" class="btn btn-primary">
+                            <i data-lucide="plus"></i> New Journey
+                        </button>
+                        <div class="backup-actions">
+                            <button id="export-data-btn" class="btn btn-secondary" title="Export for Cloud Backup">
+                                <i data-lucide="download"></i> Export
+                            </button>
+                            <button id="import-data-btn" class="btn btn-secondary" title="Import from Backup">
+                                <i data-lucide="upload"></i> Import
+                            </button>
+                            <input type="file" id="import-file" class="hidden" accept=".json">
+                        </div>
+                    </div>
 
-            <div class="controls-secondary">
-                <div class="control-group">
-                    <label id="label-group-by" class="control-label">Group by:</label>
-                    <div class="toggle-group" id="group-by-toggle">
-                        <button class="toggle-btn active" data-group="none">None</button>
-                        <button class="toggle-btn" data-group="district">District</button>
-                        <button class="toggle-btn" data-group="naadu">Region</button>
-                        <button class="toggle-btn" data-group="date">Date</button>
+                    <div class="journeys-tabs">
+                        <button class="j-tab active" data-type="plan">Future Plans</button>
+                        <button class="j-tab" data-type="trip">Past Trips</button>
+                    </div>
+
+                    <div id="journeys-list" class="journeys-grid">
+                        <!-- Journeys will be injected here -->
                     </div>
                 </div>
-                <div class="control-group">
-                    <div class="view-toggle" id="view-mode-toggle">
-                        <button class="view-btn active" data-view="grid" title="Grid View"><i
-                                data-lucide="layout-grid"></i></button>
-                        <button class="view-btn" data-view="list" title="List View"><i data-lucide="list"></i></button>
+
+                <div id="journey-detail-view" class="hidden">
+                    <div class="detail-header">
+                        <button id="back-to-journeys" class="btn-back">
+                            <i data-lucide="arrow-left"></i>
+                        </button>
+                        <h2 id="detail-j-name">Journey Name</h2>
+                    </div>
+
+                    <div class="journey-search-section">
+                        <div class="j-search-box">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="j-temple-search" placeholder="Search to add temples...">
+                        </div>
+                        <div id="j-search-results" class="j-search-results hidden"></div>
+                    </div>
+
+                    <div class="journey-temples-list">
+                        <div class="j-list-header">
+                            <span id="j-temple-count">0 Temples</span>
+                        </div>
+                        <div id="j-temples-container">
+                            <!-- Temples in journey go here -->
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="temple-list" class="temple-grid">
-                <!-- Temples will be injected here -->
+        <!-- Create Journey Modal -->
+        <div id="create-journey-modal" class="modal hidden">
+            <div class="modal-content create-j-content">
+                <button class="close-modal" id="close-create-j"><i data-lucide="x"></i></button>
+                <h3>Create New Journey</h3>
+                <div class="form-group">
+                    <label>Journey Name</label>
+                    <input type="text" id="j-name-input" placeholder="e.g., Kumbakonam Pilgrimage Oct 2024">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <div class="j-type-toggle">
+                        <button class="type-btn active" data-type="plan">Future Plan</button>
+                        <button class="type-btn" data-type="trip">Past Trip</button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button id="save-journey-btn" class="btn btn-primary">Save Journey</button>
+                </div>
             </div>
-        </main>
+        </div>
+
+        <div id="view-temples" class="view-section">
+            <section class="hero">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <h2 class="hero-subtitle">Exploring the Divine</h2>
+                    <h1 class="hero-title">Paadal Petra Sivasthalangal</h1>
+                    <p class="hero-desc">Discover the 276 sacred temples of Lord Shiva across Bharat, immortalized by
+                        the
+                        Moovar saints.</p>
+                    <div class="hero-stats">
+                        <div class="h-stat"><span>276</span><label>Temples</label></div>
+                        <div class="h-stat"><span>14</span><label>Regions</label></div>
+                        <div class="h-stat"><span>3</span><label>Saints</label></div>
+                    </div>
+                </div>
+            </section>
+
+            <main>
+                <div class="filters">
+                    <div class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" id="search-input" placeholder="Search temples, districts..."
+                            autocomplete="off">
+                        <button id="voice-search-btn" class="voice-btn" title="Voice Search">
+                            <i data-lucide="mic"></i>
+                        </button>
+                        <div id="search-suggestions" class="search-suggestions hidden"></div>
+                    </div>
+                    <div class="region-filter">
+                        <select id="region-select">
+                            <option value="All">All Regions</option>
+                        </select>
+                    </div>
+                    <div class="district-filter">
+                        <select id="district-select">
+                            <option value="All">All Districts</option>
+                        </select>
+                    </div>
+                    <div class="status-tabs">
+                        <button class="tab active" data-filter="all">All</button>
+                        <button class="tab" data-filter="visited">Visited</button>
+                        <button class="tab" data-filter="togo">To Go</button>
+                    </div>
+                </div>
+
+                <div class="controls-secondary">
+                    <div class="control-group">
+                        <label id="label-group-by" class="control-label">Group by:</label>
+                        <div class="toggle-group" id="group-by-toggle">
+                            <button class="toggle-btn active" data-group="none">None</button>
+                            <button class="toggle-btn" data-group="district">District</button>
+                            <button class="toggle-btn" data-group="naadu">Region</button>
+                            <button class="toggle-btn" data-group="date">Date</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="view-toggle" id="view-mode-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grid View"><i
+                                    data-lucide="layout-grid"></i></button>
+                            <button class="view-btn" data-view="list" title="List View"><i
+                                    data-lucide="list"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="temple-list" class="temple-grid">
+                    <!-- Temples will be injected here -->
+                </div>
+
+                <div id="pagination" class="pagination-container">
+                    <!-- Pagination buttons -->
+                </div>
+            </main>
+        </div>
 
         <div id="temple-modal" class="modal hidden">
             <div class="modal-content">
